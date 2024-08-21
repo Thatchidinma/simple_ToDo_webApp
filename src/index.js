@@ -1,19 +1,15 @@
-const newTask = document.getElementById('newTask')
-const storeTask = document.getElementById("Tasks")
-// const addTask = document.getElementById('list')
-//const checkbox = document.getElementById('checkbox')
-const errMsg = document.getElementById('errMsg')
-// let list
+//scroll to the bottom for bugs to be fixed
 
+const newTask = document.getElementById('newTask')
+const checkBox = document.getElementById('checkbox')
+const storeTask = document.getElementById("Tasks")
+const errMsg = document.getElementById('errMsg')
 
 let checked = false
 
-
-// if(listPar !== undefined){
-//     listPar.innerHTML = localStorage.getItem('value')
-// }
 // localStorage.removeItem("data");
 
+// function to save data on the page, call the saveData inside every function 
 function saveData() {
     localStorage.setItem('data', storeTask.innerHTML)
 }
@@ -21,23 +17,21 @@ function saveData() {
 storeTask.innerHTML = localStorage.getItem('data')
 
 
-
-newTask.addEventListener('keypress', function (e) {
-    //check if enter key is clicked
-    if (e.key === 'Enter') {
+function addToTask (e) {
+    //check if enter key or checkbox is clicked 
+    if (e.key === 'Enter' || checkBox.checked == true) {
         //check if input field is empty or not
         if(newTask.value === ""){
             //if empty show error message
-            errMsg.classList.remove('hidden') 
+            errMsg.classList.remove('hidden')
+            //uncheck the checkbox
+            checkBox.checked = false
         }else{
             //else hide error message
             errMsg.classList.add('hidden') 
 
             //create list element and assign it to  variable
             let list = document.createElement("li");
-
-            //add onclick event to list variable(list element)
-       
 
             //add id to list variable(list element)
             list.setAttribute("Id", "listItem")
@@ -52,35 +46,32 @@ newTask.addEventListener('keypress', function (e) {
 
             //clear input
             newTask.value = ""
+            //uncheck checkbox
+            checkBox.checked = false
 
             saveData()
         }
     }
 }
-)
+
+
+newTask.addEventListener('keypress', addToTask )
+checkBox.addEventListener('click', addToTask)
 
 
 
-// function toggleCheck(){
-//     checked = !checked
-//     console.log(checked)
-    
-//     if(checked){
-//         list.classList.remove('before:bg-unchecked', 'no-underline')
-//         task.classList.add('before:bg-checked', 'line-through', 'text-gray-700')
-//     }else{
-//         list.classList.remove('before:bg-checked', 'line-through', 'text-gray-700')
-//         list.classList.add('before:bg-unchecked', 'no-underline')
-//     }
-// }
 
-    //const task = document.getElementById('listItem')
 
+    //function to check and uncheck task
+    //first add an event listener to check when the list is clicked
     storeTask.addEventListener("click", function(e){
+        //if where clicked is an <li> tag
         if(e.target.tagName === "LI"){
+            //change the checked variable to the opposite of value
             checked = !checked
-            console.log(checked)
+            // console.log(checked)
 
+            //if checked or unchecked add and remove some classes
             if(checked){
                 e.target.classList.remove('before:bg-unchecked', 'no-underline')
                 e.target.classList.add('before:bg-checked', 'line-through', 'text-gray-700')
@@ -94,15 +85,24 @@ newTask.addEventListener('keypress', function (e) {
     })
     
 
-    function removeTasK(){
-        if (storeTask.children.classList.includes("before:bg-checked")){
-            
-        }
+    //function to remove finished task
+    function removeTask(){
+        //get children element of storeTask
+        const collection = storeTask.children
+    
+        // loop through children
+        for (let i = 0; i < collection.length; i++) {
 
+            // if children class contains 'before:bg-checked' i.e the task is checked, remove the child
+            if(JSON.stringify(collection[i].classList).includes('before:bg-checked')){
+            collection[i].remove()
+            }
+          }
+          saveData()
     }
     
 
 
-
-
-// after classes removed: after:h-6 after:w-6 after:my-auto after:rounded-full after:bg-remove after:bg-cover after:bg-center after:ml-4 hover:after:bg-white 
+    //pending bugs
+    // 1. remove all checked task at once when the button is clicked, currently removes them in batches
+    // 2. fix checking on click, currently doesnt all check on first click
