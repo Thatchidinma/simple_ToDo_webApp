@@ -5,6 +5,7 @@ const checkBox = document.getElementById('checkbox')
 const storeTask = document.getElementById("Tasks")
 const errMsg = document.getElementById('errMsg')
 
+
 let checked = false
 
 // localStorage.removeItem("data");
@@ -48,7 +49,7 @@ function addToTask (e) {
             newTask.value = ""
             //uncheck checkbox
             checkBox.checked = false
-
+            
             saveData()
         }
     }
